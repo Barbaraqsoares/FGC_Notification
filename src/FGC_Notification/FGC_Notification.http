@@ -1,0 +1,6 @@
+@FGC_Notification_HostAddress = http://localhost:5008
+
+GET {{FGC_Notification_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
