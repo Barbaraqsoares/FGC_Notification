@@ -6,10 +6,10 @@ WORKDIR /src
 COPY . .
 
 # Restaura dependências a partir da solução (projetos estão em src/)
-RUN dotnet restore FCG_Notification.sln
+RUN dotnet restore FGC_Notification.sln
 
-# Compila e publica o projeto web (localizado em src/FCG_Notificatio)
-RUN dotnet publish src/FCG_Notification/FCG_Notification.csproj -c Release -o /app
+# Compila e publica o projeto web
+RUN dotnet publish src/FGC_Notification/FGC_Notification.csproj -c Release -o /app
 
 # Etapa 2: imagem final para rodar
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
