@@ -1,5 +1,6 @@
 using FGC_Notification.Services;
 using Microsoft.Extensions.Logging;
+using Xunit;
 
 namespace FGC_Notification.Tests;
 

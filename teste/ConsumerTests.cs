@@ -3,6 +3,7 @@ using FGC_Notification.Contracts;
 using FGC_Notification.Services.Interfaces;
 using MassTransit;
 using Moq;
+using Xunit;
 
 namespace FGC_Notification.Tests;
 
