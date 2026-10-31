@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using FGC_Notification.Extensions;
 using Serilog;
 
 return Program.RunApplication(args);
 
-public partial class Program
+[ExcludeFromCodeCoverage]
+internal partial class Program
 {
     internal static int RunApplication(string[] args) =>
         Execute(() => StartApplication(args));
