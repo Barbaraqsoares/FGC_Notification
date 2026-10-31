@@ -2,11 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copia todo o código da solução para o contexto de build
+# Copia o código da aplicação para o contexto de build
 COPY . .
 
-# Restaura dependências a partir da solução (projetos estão em src/)
-RUN dotnet restore FGC_Notification.sln
+# Restaura apenas as dependências necessárias à aplicação de produção
+RUN dotnet restore src/FGC_Notification/FGC_Notification.csproj
 
 # Compila e publica o projeto web
 RUN dotnet publish src/FGC_Notification/FGC_Notification.csproj -c Release -o /app

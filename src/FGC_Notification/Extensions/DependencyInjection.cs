@@ -1,13 +1,18 @@
-﻿using FGC_Notification.Consumers;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using FGC_Notification.Consumers;
 using FGC_Notification.Services;
 using FGC_Notification.Services.Interfaces;
 using MassTransit;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 namespace FGC_Notification.Extensions;
 
 /// <summary>
 /// Registra os serviços da camada de API (controllers, autenticação e Swagger).
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     /// <summary>
@@ -106,8 +111,6 @@ public static class DependencyInjection
                 });
             });
         });
-
-        services.AddScoped<IEventPublisher, RabbitMqEventPublisher>();
 
         return services;
     }

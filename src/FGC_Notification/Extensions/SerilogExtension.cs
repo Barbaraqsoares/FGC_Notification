@@ -1,8 +1,11 @@
-﻿using Serilog;
+﻿using System.Diagnostics.CodeAnalysis;
+using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
 namespace FGC_Notification.Extensions;
+
+[ExcludeFromCodeCoverage]
 public static class SerilogConfiguration
 {
     /// <summary>
@@ -37,19 +40,16 @@ public static class SerilogConfiguration
     public static IApplicationBuilder UseRequestLogging(this IApplicationBuilder app) =>
         app.UseSerilogRequestLogging(options =>
         {
-            options.GetLevel = (httpContext, elapsed, exception) =>
-            {
-                if (exception is not null || httpContext.Response.StatusCode >= 500)
-                {
-                    return LogEventLevel.Error;
-                }
-
-                if (httpContext.Request.Path.StartsWithSegments("/health"))
-                {
-                    return LogEventLevel.Debug;
-                }
-
-                return LogEventLevel.Information;
-            };
+            options.GetLevel = GetRequestLogLevel;
         });
+
+    private static LogEventLevel GetRequestLogLevel(
+        HttpContext httpContext,
+        double elapsed,
+        Exception? exception) =>
+        exception is not null || httpContext.Response.StatusCode >= 500
+            ? LogEventLevel.Error
+            : httpContext.Request.Path.StartsWithSegments("/health")
+                ? LogEventLevel.Debug
+                : LogEventLevel.Information;
 }

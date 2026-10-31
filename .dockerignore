@@ -6,6 +6,7 @@ docker-compose*
 # Pastas de build locais (Obrigatório ignorar para evitar conflitos)
 **/bin/
 **/obj/
+/teste/
 
 # Pastas e arquivos do Git
 .git

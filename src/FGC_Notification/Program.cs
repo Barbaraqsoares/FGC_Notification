@@ -1,65 +1,75 @@
 using FGC_Notification.Extensions;
 using Serilog;
 
-// Cria um logger mínimo no bootstrap para garantir mensagens no console em caso de falha na inicialização
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
+return Program.RunApplication(args);
 
-try
+public partial class Program
 {
-    var builder = WebApplication.CreateBuilder(args);
+    internal static int RunApplication(string[] args) =>
+        Execute(() => StartApplication(args));
 
-    builder.Host.UseSerilogLogging();
-
-    // Registrar serviços e documentação usando métodos centralizados
-    builder.Services.ConfigMassTransit(builder.Configuration);
-    builder.Services.AddInfrastructure(builder.Configuration);
-    builder.Services.AddSwaggerDocumentation();
-
-    // Serviços da aplicação
-    builder.Services.AddControllers();
-
-    var app = builder.Build();
-
-    app.Run();
-}
-catch (Exception exception) when (exception is not HostAbortedException)
-{
-    // Garante que a exceção de inicialização seja visível no console e no logger
-    /*Console.Error.WriteLine(exception.ToString());
-    Log.Fatal(exception, "A aplicação não pôde ser iniciada");
-    Log.CloseAndFlush();
-    return 1;*/
-    Console.Error.WriteLine("Startup exception (full):");
-    Console.Error.WriteLine(exception.ToString());
-
-    // Se for AggregateException, imprime cada inner
-    if (exception is AggregateException agg)
+    internal static int Execute(Action startApplication)
     {
-        var flat = agg.Flatten();
-        Console.Error.WriteLine("AggregateException flattened. Inner exceptions:");
-        foreach (var inner in flat.InnerExceptions)
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .CreateBootstrapLogger();
+
+        try
         {
-            Console.Error.WriteLine("---- Inner exception ----");
-            Console.Error.WriteLine(inner.ToString());
+            startApplication();
+        }
+        catch (Exception exception) when (exception is not HostAbortedException)
+        {
+            LogStartupException(exception);
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+
+        return 0;
+    }
+
+    private static void StartApplication(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Host.UseSerilogLogging();
+
+        builder.Services.ConfigMassTransit(builder.Configuration);
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddSwaggerDocumentation();
+        builder.Services.AddControllers();
+
+        var app = builder.Build();
+
+        app.Run();
+    }
+
+    private static void LogStartupException(Exception exception)
+    {
+        Console.Error.WriteLine("Startup exception (full):");
+        Console.Error.WriteLine(exception.ToString());
+
+        if (exception is AggregateException aggregate)
+        {
+            var flat = aggregate.Flatten();
+            Console.Error.WriteLine("AggregateException flattened. Inner exceptions:");
+            foreach (var inner in flat.InnerExceptions)
+            {
+                Console.Error.WriteLine("---- Inner exception ----");
+                Console.Error.WriteLine(inner.ToString());
+            }
+        }
+        else
+        {
+            var current = exception.InnerException;
+            while (current != null)
+            {
+                Console.Error.WriteLine("---- Inner exception ----");
+                Console.Error.WriteLine(current.ToString());
+                current = current.InnerException;
+            }
         }
     }
-    else
-    {
-        // Percorre a cadeia de inner exceptions
-        var current = exception.InnerException;
-        while (current != null)
-        {
-            Console.Error.WriteLine("---- Inner exception ----");
-            Console.Error.WriteLine(current.ToString());
-            current = current.InnerException;
-        }
-    }
 }
-finally
-{
-    Log.CloseAndFlush();
-}
-
-return 0;
