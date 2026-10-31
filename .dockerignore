@@ -1,0 +1,28 @@
+# O próprio Dockerfile e configurações do Docker
+Dockerfile
+.dockerignore
+docker-compose*
+
+# Pastas de build locais (Obrigatório ignorar para evitar conflitos)
+**/bin/
+**/obj/
+
+# Pastas e arquivos do Git
+.git
+.gitignore
+
+# Configurações de IDEs (Visual Studio / VS Code / Rider)
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# Arquivos de ambiente e segredos locais
+.env
+*.secrets.json
+appsettings.Development.json
+
+# Logs e arquivos temporários
+*.log
+.DS_Store
