@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FGC_Notification.Contracts;
+﻿namespace FGC_Notification.Contracts;
 
 public sealed record UserCreatedEvent
 {
