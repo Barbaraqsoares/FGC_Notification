@@ -1,11 +1,11 @@
-using FGC_Notification.Consumers;
-using FGC_Notification.Contracts;
-using FGC_Notification.Services.Interfaces;
+using FCG_Notification.Consumers;
+using FCG_Notification.Contracts;
+using FCG_Notification.Services.Interfaces;
 using MassTransit;
 using Moq;
 using Xunit;
 
-namespace FGC_Notification.Tests;
+namespace FCG_Notification.Tests;
 
 public class ConsumerTests
 {
@@ -66,9 +66,11 @@ public class ConsumerTests
         var context = new Mock<ConsumeContext<PaymentProcessedEvent>>();
         context.SetupGet(value => value.Message).Returns(new PaymentProcessedEvent
         {
+            OrderId = Guid.NewGuid(),
             UserId = 42,
             GameId = 7,
             Price = 19.95m,
+            ProcessedAtUtc = DateTime.UtcNow,
             Status = status
         });
         return context;

@@ -146,6 +146,7 @@ public static class DependencyInjection
                     e.UseMessageRetry(r => r.Intervals(500, 1000, 3000));
                     e.PrefetchCount = 8;
                 });
+            });
         });
 
         return services;

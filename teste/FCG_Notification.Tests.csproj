@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\FGC_Notification\FGC_Notification.csproj" />
+    <ProjectReference Include="..\src\FCG_Notification\FCG_Notification.csproj" />
   </ItemGroup>
 
 </Project>

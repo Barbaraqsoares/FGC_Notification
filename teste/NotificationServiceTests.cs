@@ -1,8 +1,8 @@
-using FGC_Notification.Services;
+using FCG_Notification.Services;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
-namespace FGC_Notification.Tests;
+namespace FCG_Notification.Tests;
 
 public class NotificationServiceTests
 {
