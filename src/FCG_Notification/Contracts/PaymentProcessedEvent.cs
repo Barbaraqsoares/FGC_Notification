@@ -3,6 +3,7 @@
 namespace FCG_Notification.Contracts;
 
 [EntityName("FCG_PaymentsAPI:PaymentProcessedEvent")]
+[MessageUrn("urn:message:Fcg.Contracts:PaymentProcessedEvent", useDefaultPrefix: false)]
 public sealed record PaymentProcessedEvent
 {
     public Guid OrderId { get; init; }
