@@ -20,7 +20,6 @@ public class PaymentProcessedConsumer : IConsumer<PaymentProcessedEvent>
         if (message.Status != "Approved")
             return;
 
-        await _notificationService
-            .SendPurchaseConfirmationAsync(message.UserId, message.GameId, message.Price);
+        await _notificationService.SendPurchaseConfirmationAsync(message.UserId, message.GameId, message.Price);
     }
 }

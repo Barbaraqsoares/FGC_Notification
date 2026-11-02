@@ -1,9 +1,3 @@
 ﻿namespace FCG_Notification.Contracts;
 
-public sealed record PaymentProcessedEvent
-{
-    public int UserId { get; init; }
-    public int GameId { get; init; }
-    public decimal Price { get; init; }
-    public string Status { get; init; } = string.Empty;
-}
+public sealed record PaymentProcessedEvent(Guid OrderId, int UserId, int GameId, decimal Price, string Status, DateTime ProcessedAtUtc, string? Reason)
