@@ -1,11 +1,12 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using FCG_Notification.Consumers;
+using FCG_Notification.Contracts;
 using FCG_Notification.Services;
 using FCG_Notification.Services.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace FCG_Notification.Extensions;
 
@@ -109,7 +110,42 @@ public static class DependencyInjection
                     h.Username(username); //guest
                     h.Password(password); //guest
                 });
-            });
+
+                cfg.UseRawJsonSerializer();
+
+                cfg.ReceiveEndpoint("user-created-event-queue", e =>
+                {
+                    e.ConfigureConsumeTopology = false;
+
+                    e.UseRawJsonDeserializer(RawSerializerOptions.All);
+
+                    e.Bind("FCG_UserApi:user-created-event", s => s.ExchangeType = "fanout");
+
+                    cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>()
+                        .SetEntityName("FCG_UserApi:user-created-event");
+
+                    e.ConfigureConsumer<UserCreatedConsumer>(context);
+
+                    e.UseMessageRetry(r => r.Intervals(500, 1000, 3000));
+                    e.PrefetchCount = 8;
+                });
+
+                cfg.ReceiveEndpoint("payment-processed-queue", e =>
+                {
+                    e.ConfigureConsumeTopology = false;
+
+                    e.UseRawJsonDeserializer(RawSerializerOptions.All);
+
+                    e.Bind("FCG_PaymentsAPI:PaymentProcessedEvent", s => s.ExchangeType = "fanout");
+
+                    cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>()
+                        .SetEntityName("FCG_PaymentsAPI:PaymentProcessedEvent");
+
+                    e.ConfigureConsumer<PaymentProcessedConsumer>(context);
+
+                    e.UseMessageRetry(r => r.Intervals(500, 1000, 3000));
+                    e.PrefetchCount = 8;
+                });
         });
 
         return services;
