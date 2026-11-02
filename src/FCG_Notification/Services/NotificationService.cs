@@ -1,6 +1,6 @@
-﻿using FGC_Notification.Services.Interfaces;
+﻿using FCG_Notification.Services.Interfaces;
 
-namespace FGC_Notification.Services;
+namespace FCG_Notification.Services;
 
 public class NotificationService : INotificationService
 {

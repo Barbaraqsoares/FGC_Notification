@@ -1,13 +1,13 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using FGC_Notification.Consumers;
-using FGC_Notification.Services;
-using FGC_Notification.Services.Interfaces;
+using FCG_Notification.Consumers;
+using FCG_Notification.Services;
+using FCG_Notification.Services.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
-namespace FGC_Notification.Extensions;
+namespace FCG_Notification.Extensions;
 
 /// <summary>
 /// Registra os serviços da camada de API (controllers, autenticação e Swagger).
@@ -70,7 +70,7 @@ public static class DependencyInjection
         {
             swagger.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "FGC_Notification",
+                Title = "FCG_Notification",
                 Version = "v1",
                 Description = "API responsável por receber notificações",
                 Contact = new OpenApiContact

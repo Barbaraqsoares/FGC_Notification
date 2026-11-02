@@ -3,7 +3,7 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-namespace FGC_Notification.Extensions;
+namespace FCG_Notification.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class SerilogConfiguration

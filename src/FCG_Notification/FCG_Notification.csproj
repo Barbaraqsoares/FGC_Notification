@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="FGC_Notification.Tests" />
+    <InternalsVisibleTo Include="FCG_Notification.Tests" />
   </ItemGroup>
 
 </Project>

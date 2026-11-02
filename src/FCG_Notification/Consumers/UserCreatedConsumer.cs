@@ -1,8 +1,8 @@
-﻿using FGC_Notification.Contracts;
-using FGC_Notification.Services.Interfaces;
+﻿using FCG_Notification.Contracts;
+using FCG_Notification.Services.Interfaces;
 using MassTransit;
 
-namespace FGC_Notification.Consumers;
+namespace FCG_Notification.Consumers;
 
 public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
 {

@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using FGC_Notification.Extensions;
+using FCG_Notification.Extensions;
 using Serilog;
 
 return Program.RunApplication(args);
