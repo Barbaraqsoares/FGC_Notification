@@ -17,7 +17,6 @@ public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
     {
         var message = context.Message;
 
-        await _notificationService
-            .SendWelcomeEmailAsync(message.Email, message.UserId, message.Name);
+        await _notificationService.SendWelcomeEmailAsync(message.Email, message.UserId, message.Name);
     }
 }
