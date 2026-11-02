@@ -113,6 +113,9 @@ public static class DependencyInjection
 
                 cfg.UseRawJsonSerializer();
 
+                cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>().SetEntityName("FCG_UserApi:user-created-event");
+                cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>().SetEntityName("FCG_PaymentsAPI:PaymentProcessedEvent");
+
                 cfg.ReceiveEndpoint("user-created-event-queue", e =>
                 {
                     e.ConfigureConsumeTopology = false;
@@ -120,9 +123,6 @@ public static class DependencyInjection
                     e.UseRawJsonDeserializer(RawSerializerOptions.All);
 
                     e.Bind("FCG_UserApi:user-created-event", s => s.ExchangeType = "fanout");
-
-                    cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>()
-                        .SetEntityName("FCG_UserApi:user-created-event");
 
                     e.ConfigureConsumer<UserCreatedConsumer>(context);
 
@@ -137,9 +137,6 @@ public static class DependencyInjection
                     e.UseRawJsonDeserializer(RawSerializerOptions.All);
 
                     e.Bind("FCG_PaymentsAPI:PaymentProcessedEvent", s => s.ExchangeType = "fanout");
-
-                    cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>()
-                        .SetEntityName("FCG_PaymentsAPI:PaymentProcessedEvent");
 
                     e.ConfigureConsumer<PaymentProcessedConsumer>(context);
 
