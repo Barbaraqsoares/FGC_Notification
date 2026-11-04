@@ -113,8 +113,8 @@ public static class DependencyInjection
 
                 cfg.UseRawJsonSerializer();
 
-                cfg.MessageTopology.GetMessageTopology<UserCreatedEvent>().SetEntityName("FCG_UserApi:user-created-event");
-                cfg.MessageTopology.GetMessageTopology<PaymentProcessedEvent>().SetEntityName("FCG_PaymentsAPI:PaymentProcessedEvent");
+                cfg.Message<UserCreatedEvent>(m => m.SetEntityName("FCG_Notification.Contracts:UserCreatedEvent"));
+                cfg.Message<PaymentProcessedEvent>(m => m.SetEntityName("FCG_Notification.Contracts:PaymentProcessedEvent"));
 
 
                 cfg.ReceiveEndpoint("user-created-event-queue", e =>
