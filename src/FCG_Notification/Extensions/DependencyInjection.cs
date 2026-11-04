@@ -99,29 +99,50 @@ public static class DependencyInjection
                 cfg.Message<UserCreatedEvent>(m => m.SetEntityName("FCG_Notification.Contracts:UserCreatedEvent"));
                 cfg.Message<PaymentProcessedEvent>(m => m.SetEntityName("FCG_Notification.Contracts:PaymentProcessedEvent"));
 
+
                 cfg.ReceiveEndpoint("user-created-event-queue", e =>
                 {
                     e.ConfigureConsumeTopology = false;
 
-                    e.Bind("FCG_Notification.Contracts:UserCreatedEvent", s => s.ExchangeType = "fanout");
+                    e.Bind("FCG_UserApi:user-created-event",
+                        s => s.ExchangeType = "fanout");
+
+                    e.UseRawJsonDeserializer(
+                        RawSerializerOptions.All,
+                        isDefault: true);
 
                     e.ConfigureConsumer<UserCreatedConsumer>(context);
 
-                    e.UseMessageRetry(r => r.Intervals(500, 1000, 3000));
+                    e.UseMessageRetry(r =>
+                        r.Intervals(500, 1000, 3000));
+
                     e.PrefetchCount = 8;
                 });
 
-                cfg.ReceiveEndpoint("payment-processed-queue", e =>
-                {
-                    e.ConfigureConsumeTopology = false;
 
-                    e.Bind("FCG_Notification.Contracts:PaymentProcessedEvent", s => s.ExchangeType = "fanout");
 
-                    e.ConfigureConsumer<PaymentProcessedConsumer>(context);
+                cfg.ReceiveEndpoint(
+                    "notifications-payment-processed-queue",
+                    e =>
+                    {
+                        e.ConfigureConsumeTopology = false;
 
-                    e.UseMessageRetry(r => r.Intervals(500, 1000, 3000));
-                    e.PrefetchCount = 8;
-                });
+                        e.UseRawJsonDeserializer(
+                            RawSerializerOptions.All,
+                            isDefault: true);
+
+                        e.Bind(
+                            "FCG_PaymentsAPI:PaymentProcessedEvent",
+                            s => s.ExchangeType = "fanout");
+
+                        e.ConfigureConsumer<PaymentProcessedConsumer>(context);
+
+                        e.UseMessageRetry(r =>
+                            r.Intervals(500, 1000, 3000));
+
+                        e.PrefetchCount = 8;
+                    });
+
             });
         });
 
