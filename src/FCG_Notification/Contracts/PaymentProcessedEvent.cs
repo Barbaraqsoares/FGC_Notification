@@ -2,7 +2,6 @@
 
 namespace FCG_Notification.Contracts;
 
-
 public sealed record PaymentProcessedEvent
 {
     public Guid OrderId { get; init; }

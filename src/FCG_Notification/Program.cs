@@ -7,8 +7,7 @@ return Program.RunApplication(args);
 [ExcludeFromCodeCoverage]
 internal partial class Program
 {
-    internal static int RunApplication(string[] args) =>
-        Execute(() => StartApplication(args));
+    internal static int RunApplication(string[] args) => Execute(() => StartApplication(args));
 
     internal static int Execute(Action startApplication)
     {
