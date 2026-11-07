@@ -32,6 +32,26 @@ O RabbitMQ é configurado pelas opções `RabbitMq:Host`,
 definidas por configuração ou variáveis de ambiente. A aplicação também
 configura o Swagger para documentação da API.
 
+## Arquitetura
+
+![Arquitetura do serviço FCG Notification](./docs/arquitetura.svg)
+
+A aplicação recebe eventos publicados por outros serviços, encaminha-os para o
+RabbitMQ e os processa em consumidores específicos. O `NotificationService`
+registra as notificações em log, simulando o envio de e-mail para o cliente.
+
+## Fluxograma
+
+![Fluxograma do processamento de notificações](./docs/fluxograma.svg)
+
+O fluxo principal consiste em:
+
+1. Publicação de um evento por outro microsserviço;
+2. Entrega do evento no RabbitMQ;
+3. Consumo pelo `UserCreatedConsumer` ou `PaymentProcessedConsumer`;
+4. Validação do status (`Approved`) quando aplicável;
+5. Registro da mensagem no log do sistema.
+
 ## Testes
 
 Execute os testes automatizados pela solução com:

@@ -1,0 +1,109 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title description">
+  <title id="title">Arquitetura do FCG Notification</title>
+  <desc id="description">Diagrama da arquitetura do serviço FCG Notification com serviços distintos publicando eventos no RabbitMQ e consumidores do microsserviço processando notificações.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#edf3fb"/>
+    </linearGradient>
+    <linearGradient id="heading" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#10233f"/>
+      <stop offset="1" stop-color="#173d61"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#46627f"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#17836f"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #18304c; }
+      .title { font-size: 38px; font-weight: 700; fill: #fff; }
+      .subtitle { font-size: 17px; fill: #d7e6f4; }
+      .section { font-size: 19px; font-weight: 700; }
+      .card-title { font-size: 18px; font-weight: 700; }
+      .body { font-size: 15px; }
+      .small { font-size: 13px; fill: #52677e; }
+      .arrow-label { font-size: 12px; font-weight: 600; fill: #52677e; }
+      .module { fill: #fff; stroke: #cbd8e6; stroke-width: 1.5; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1080" fill="url(#background)"/>
+  <rect x="0" y="0" width="1600" height="130" fill="url(#heading)"/>
+  <text x="54" y="61" class="title">FCG Notification | Arquitetura</text>
+  <text x="56" y="94" class="subtitle">Serviços independentes publicando eventos no RabbitMQ para processamento de notificações</text>
+  <rect x="1370" y="42" width="175" height="42" rx="21" fill="#244f70"/>
+  <text x="1457" y="69" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">EVENT-DRIVEN</text>
+
+  <rect x="35" y="155" width="1530" height="780" rx="22" fill="#f3f8fd" stroke="#9db4ca" stroke-width="2" stroke-dasharray="9 7"/>
+  <rect x="64" y="140" width="360" height="34" rx="17" fill="#e1edf8"/>
+  <text x="82" y="163" class="section">Microsserviços produtores</text>
+  <text x="440" y="162" class="small">cada serviço envia mensagens para o broker</text>
+
+  <rect x="75" y="220" width="300" height="190" rx="15" class="module"/>
+  <rect x="75" y="220" width="300" height="48" rx="15" fill="#dff4ef"/>
+  <path d="M75 253 H375 V268 H75 Z" fill="#dff4ef"/>
+  <text x="95" y="249" class="card-title">FCG_UserApi</text>
+  <text x="95" y="295" class="body" font-weight="700">Publica no RabbitMQ</text>
+  <text x="95" y="322" class="body">UserCreatedEvent</text>
+  <text x="95" y="348" class="body">Dados do usuário</text>
+  <text x="95" y="375" class="small">Nome, usuário e e-mail</text>
+
+  <rect x="75" y="570" width="300" height="190" rx="15" class="module"/>
+  <rect x="75" y="570" width="300" height="48" rx="15" fill="#e7e8ff"/>
+  <path d="M75 603 H375 V618 H75 Z" fill="#e7e8ff"/>
+  <text x="95" y="599" class="card-title">FCG_PaymentsAPI</text>
+  <text x="95" y="645" class="body" font-weight="700">Publica no RabbitMQ</text>
+  <text x="95" y="672" class="body">PaymentProcessedEvent</text>
+  <text x="95" y="698" class="body">Dados do pagamento</text>
+  <text x="95" y="725" class="small">UserId, GameId, Price, Status</text>
+
+  <rect x="490" y="340" width="330" height="300" rx="18" fill="#fff" stroke="#7ea5cf" stroke-width="2"/>
+  <rect x="490" y="340" width="330" height="48" rx="18" fill="#e3f0ff"/>
+  <path d="M490 373 H820 V388 H490 Z" fill="#e3f0ff"/>
+  <text x="655" y="371" text-anchor="middle" class="card-title">RabbitMQ</text>
+  <text x="655" y="420" text-anchor="middle" class="body" font-weight="700">Exchanges e filas</text>
+  <text x="510" y="450" class="small">FCG_UserApi:user-created-event</text>
+  <text x="510" y="474" class="small">FCG_PaymentsAPI:PaymentProcessedEvent</text>
+  <line x1="510" y1="492" x2="800" y2="492" stroke="#dce8f4"/>
+  <text x="655" y="520" text-anchor="middle" class="body" font-weight="700">Filas de consumo</text>
+  <text x="510" y="548" class="small">user-created-event-queue</text>
+  <text x="510" y="572" class="small">notifications-payment-processed-queue</text>
+  <rect x="551" y="596" width="208" height="25" rx="12" fill="#edf5ff"/>
+  <text x="655" y="614" text-anchor="middle" class="small">MassTransit + fanout</text>
+
+  <rect x="1000" y="220" width="510" height="150" rx="15" class="module"/>
+  <rect x="1000" y="220" width="510" height="44" rx="15" fill="#edf5ff"/>
+  <path d="M1000 253 H1510 V268 H1000 Z" fill="#edf5ff"/>
+  <text x="1020" y="252" class="card-title">UserCreatedConsumer</text>
+  <text x="1020" y="298" class="body">Consome UserCreatedEvent da fila de usuários</text>
+  <text x="1020" y="326" class="body">Chama SendWelcomeEmailAsync</text>
+  <text x="1020" y="350" class="small">Notificação de boas-vindas</text>
+
+  <rect x="1000" y="430" width="510" height="150" rx="15" class="module"/>
+  <rect x="1000" y="430" width="510" height="44" rx="15" fill="#fff0df"/>
+  <path d="M1000 463 H1510 V478 H1000 Z" fill="#fff0df"/>
+  <text x="1020" y="462" class="card-title">PaymentProcessedConsumer</text>
+  <text x="1020" y="508" class="body">Consome PaymentProcessedEvent da fila de pagamentos</text>
+  <text x="1020" y="536" class="body">Só continua quando Status == Approved</text>
+  <text x="1020" y="560" class="small">Chama SendPurchaseConfirmationAsync</text>
+
+  <rect x="1000" y="680" width="510" height="110" rx="18" class="module"/>
+  <rect x="1000" y="680" width="510" height="42" rx="18" fill="#fff1f2"/>
+  <path d="M1000 711 H1510 V726 H1000 Z" fill="#fff1f2"/>
+  <text x="1020" y="711" class="card-title">NotificationService</text>
+  <text x="1020" y="755" class="body">Registra e-mails simulados e confirmações usando ILogger</text>
+  <text x="1020" y="780" class="small">Serilog encaminha os logs para o console</text>
+
+  <path d="M375 315 L490 420" fill="none" stroke="#46627f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="395" y="300" class="arrow-label">publica UserCreatedEvent</text>
+  <path d="M375 665 L490 560" fill="none" stroke="#46627f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="395" y="700" class="arrow-label">publica PaymentProcessedEvent</text>
+  <path d="M820 410 H900 V295 H1000" fill="none" stroke="#46627f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="845" y="398" class="arrow-label">consome</text>
+  <path d="M820 570 H1000" fill="none" stroke="#46627f" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="875" y="554" class="arrow-label">consome</text>
+  <path d="M1510 295 H1540 V650 H1400 V680" fill="none" stroke="#17836f" stroke-width="2.5" marker-end="url(#greenArrow)"/>
+  <path d="M1255 580 V680" fill="none" stroke="#17836f" stroke-width="2.5" marker-end="url(#greenArrow)"/>
+</svg>

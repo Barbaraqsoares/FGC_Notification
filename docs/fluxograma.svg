@@ -1,0 +1,108 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1120" viewBox="0 0 1500 1120" role="img" aria-labelledby="title description">
+  <title id="title">Fluxograma do FCG Notification</title>
+  <desc id="description">Fluxograma do FCG Notification mostrando a publicação de eventos por serviços distintos, o consumo no RabbitMQ e o registro da notificação.</desc>
+  <defs>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#10233f"/>
+      <stop offset="1" stop-color="#1b4b70"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#52708c"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#19836f"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #18304c; }
+      .title { font-size: 36px; font-weight: 700; fill: #fff; }
+      .subtitle { font-size: 17px; fill: #d7e6f4; }
+      .lane { font-size: 20px; font-weight: 700; }
+      .node { font-size: 16px; font-weight: 600; }
+      .note { font-size: 14px; fill: #52677e; }
+      .label { font-size: 13px; font-weight: 700; fill: #52677e; }
+      .box { fill: #fff; stroke: #b9c9d8; stroke-width: 1.7; }
+      .process { fill: #eaf3ff; stroke: #9db8d4; stroke-width: 1.7; }
+      .messaging { fill: #fff0df; stroke: #e5bf8d; stroke-width: 1.7; }
+      .success { fill: #e8f5ef; stroke: #8dbbaa; stroke-width: 1.7; }
+      .decision { fill: #fff8df; stroke: #d8c575; stroke-width: 1.7; }
+      .line { fill: none; stroke: #52708c; stroke-width: 2.2; marker-end: url(#arrow); }
+      .line-green { fill: none; stroke: #19836f; stroke-width: 2.4; marker-end: url(#greenArrow); }
+    </style>
+  </defs>
+
+  <rect width="1500" height="1120" fill="#f3f7fb"/>
+  <rect width="1500" height="125" fill="url(#header)"/>
+  <text x="54" y="58" class="title">FCG Notification | Fluxograma</text>
+  <text x="56" y="91" class="subtitle">Eventos publicados por serviços distintos e processados pelo microsserviço de notificações</text>
+
+  <rect x="45" y="155" width="1410" height="300" rx="18" fill="#f7fbff" stroke="#bfd0df" stroke-width="1.5"/>
+  <rect x="66" y="138" width="430" height="37" rx="18" fill="#e1edf8"/>
+  <text x="86" y="163" class="lane">1. Serviços diferentes publicam eventos</text>
+
+  <rect x="90" y="205" width="240" height="84" rx="14" class="box"/>
+  <text x="210" y="235" text-anchor="middle" class="node">FCG_UserApi</text>
+  <text x="210" y="259" text-anchor="middle" class="note">UserCreatedEvent</text>
+
+  <rect x="90" y="320" width="240" height="84" rx="14" class="box"/>
+  <text x="210" y="350" text-anchor="middle" class="node">FCG_PaymentsAPI</text>
+  <text x="210" y="374" text-anchor="middle" class="note">PaymentProcessedEvent</text>
+
+  <rect x="655" y="220" width="220" height="180" rx="14" class="messaging"/>
+  <text x="765" y="250" text-anchor="middle" class="node">RabbitMQ</text>
+  <text x="765" y="274" text-anchor="middle" class="note">Exchange / filas</text>
+  <text x="765" y="320" text-anchor="middle" class="note">Recebe eventos dos dois serviços</text>
+  <text x="765" y="348" text-anchor="middle" class="note">e os disponibiliza para consumo</text>
+
+  <rect x="955" y="220" width="220" height="84" rx="14" class="process"/>
+  <text x="1065" y="250" text-anchor="middle" class="node">MassTransit</text>
+  <text x="1065" y="274" text-anchor="middle" class="note">encaminha para o consumer</text>
+
+  <rect x="1255" y="220" width="155" height="84" rx="14" class="success"/>
+  <text x="1332" y="250" text-anchor="middle" class="node">Consumer</text>
+  <text x="1332" y="274" text-anchor="middle" class="note">correto</text>
+
+  <path d="M330 247 H647" class="line"/>
+  <path d="M330 362 H485 V330 H647" class="line"/>
+  <path d="M875 262 H947" class="line"/>
+  <path d="M1175 262 H1247" class="line"/>
+  <text x="765" y="382" text-anchor="middle" class="label">Cada evento segue para sua fila</text>
+
+  <rect x="45" y="490" width="1410" height="570" rx="18" fill="#f7fbff" stroke="#bfd0df" stroke-width="1.5"/>
+  <rect x="66" y="473" width="420" height="37" rx="18" fill="#e1edf8"/>
+  <text x="86" y="498" class="lane">2. Consumo e notificação</text>
+
+  <rect x="90" y="550" width="220" height="90" rx="14" class="process"/>
+  <text x="200" y="580" text-anchor="middle" class="node">UserCreatedConsumer</text>
+  <text x="200" y="606" text-anchor="middle" class="note">envia email de boas-vindas</text>
+
+  <rect x="380" y="550" width="250" height="90" rx="14" class="process"/>
+  <text x="505" y="574" text-anchor="middle" class="node">PaymentProcessed</text>
+  <text x="505" y="594" text-anchor="middle" class="node">Consumer</text>
+  <text x="505" y="619" text-anchor="middle" class="note">valida status == Approved</text>
+
+  <polygon points="760,535 860,587 760,639 660,587" class="decision"/>
+  <text x="760" y="582" text-anchor="middle" class="node">Status</text>
+  <text x="760" y="602" text-anchor="middle" class="node">aprovado?</text>
+
+  <rect x="950" y="540" width="270" height="90" rx="14" class="success"/>
+  <text x="1085" y="570" text-anchor="middle" class="node">NotificationService</text>
+  <text x="1085" y="596" text-anchor="middle" class="note">registra log da confirmação</text>
+
+  <rect x="950" y="680" width="270" height="90" rx="14" class="success"/>
+  <text x="1085" y="710" text-anchor="middle" class="node">Log do sistema</text>
+  <text x="1085" y="736" text-anchor="middle" class="note">Serilog + observabilidade</text>
+
+  <rect x="360" y="760" width="240" height="90" rx="14" class="process"/>
+  <text x="480" y="790" text-anchor="middle" class="node">Ignora mensagem</text>
+  <text x="480" y="816" text-anchor="middle" class="note">quando status não é Approved</text>
+
+  <path d="M310 595 H380" class="line"/>
+  <path d="M630 595 H660" class="line"/>
+  <path d="M860 587 H950" class="line-green"/>
+  <text x="902" y="570" class="label">sim</text>
+  <path d="M1085 630 V680" class="line-green"/>
+  <path d="M760 639 L760 760 L600 760" class="line"/>
+  <text x="720" y="746" class="label">não</text>
+
+  <text x="86" y="930" class="note">Fluxo principal: evento recebido → consumer correto → validação → registro no log da aplicação.</text>
+</svg>
